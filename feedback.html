@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Feedback - Smart 3D Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  :root{
+    --bg-0:#100e26; --bg-1:#15132e; --bg-2:#1c1a3d;
+    --accent:#6C63FF; --accent-2:#8B7FFF; --accent-dim:rgba(108,99,255,0.16);
+    --amber:#F5A623;
+    --card:#ffffff; --line:rgba(255,255,255,0.07);
+    --text-hi:#ffffff; --text-mid:#b9b6d9; --text-low:#7c78a0;
+    --ink:#1c1836; --ink-mid:#605c85; --ink-low:#9491b5;
+    --radius:18px;
+    --border:#E5E2FA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg-0);
+    color:var(--text-hi);
+    min-height:100vh;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:38px 38px;
+    background-attachment:fixed;
+  }
+  header{
+    display:flex; align-items:center; gap:16px;
+    padding:18px 32px;
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border-bottom:1px solid var(--line);
+  }
+  .back-btn{
+    width:38px;height:38px;border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-mid); cursor:pointer; text-decoration:none; font-size:16px;
+    transition:background .15s;
+  }
+  .back-btn:hover{background:rgba(255,255,255,0.12);}
+  .head-titles h1{ font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; letter-spacing:0.5px; }
+  .head-titles p{ font-size:12px; color:var(--text-low); margin-top:2px; }
+
+  main{ max-width:640px; margin:0 auto; padding:36px 24px 60px; }
+
+  .intro{ margin-bottom:24px; }
+  .intro h2{ font-family:'Poppins',sans-serif; font-size:20px; font-weight:700; color:var(--text-hi); margin-bottom:6px; }
+  .intro p{ font-size:13px; color:var(--text-low); }
+
+  .form-card{
+    background:var(--card); border-radius:var(--radius);
+    padding:28px; box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  }
+
+  .field{ margin-bottom:18px; }
+  .field label{
+    display:block; font-size:12.5px; font-weight:600; color:var(--ink);
+    margin-bottom:7px;
+  }
+  .type-chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .type-chip{
+    padding:8px 14px; border-radius:999px; font-size:12px; font-weight:600;
+    background:#F5F4FF; color:var(--ink-mid); border:1.5px solid transparent;
+    cursor:pointer; transition:.15s;
+  }
+  .type-chip.selected{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
+
+  select, input[type="text"], textarea{
+    width:100%; padding:12px 14px; border-radius:12px;
+    border:1.5px solid var(--border); font-family:inherit; font-size:13px;
+    color:var(--ink); background:#fff;
+  }
+  select:focus, input:focus, textarea:focus{ outline:none; border-color:var(--accent); }
+  textarea{ resize:vertical; min-height:100px; }
+
+  .submit-btn{
+    width:100%; padding:14px; border:none; border-radius:999px;
+    background:var(--accent); color:#fff; font-family:inherit;
+    font-size:14px; font-weight:600; cursor:pointer; margin-top:6px;
+    transition:background .15s;
+  }
+  .submit-btn:hover{ background:#5A50E8; }
+
+  .success-msg{
+    display:none; align-items:center; gap:12px;
+    background:#EFFBF3; border:1.5px solid #B7E8C8; border-radius:14px;
+    padding:16px 18px; margin-top:18px; color:#1E8449; font-size:13px; font-weight:500;
+  }
+  .success-msg.show{ display:flex; }
+  .success-msg i{ font-size:18px; }
+
+  @media(max-width:520px){ header{padding:16px 18px;} main{padding:26px 16px 40px;} .form-card{padding:22px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+  <div class="head-titles">
+    <h1>SHARE FEEDBACK</h1>
+    <p>Help us improve the campus map</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <h2>Spotted something off?</h2>
+    <p>Report a wrong pin, a missing building, or suggest an improvement &mdash; it helps keep the map accurate for everyone.</p>
+  </div>
+
+  <div class="form-card">
+    <form id="feedbackForm">
+
+      <div class="field">
+        <label>What's this about?</label>
+        <div class="type-chips" id="typeChips">
+          <div class="type-chip selected" data-value="Wrong pin location">Wrong pin location</div>
+          <div class="type-chip" data-value="Missing building">Missing building</div>
+          <div class="type-chip" data-value="Incorrect info">Incorrect info</div>
+          <div class="type-chip" data-value="App bug">App bug</div>
+          <div class="type-chip" data-value="Other">Other</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="building">Which building? (optional)</label>
+        <select id="building">
+          <option value="">Not specific to one building</option>
+          <option>Main Gate</option>
+          <option>Side Gate</option>
+          <option>Main Block</option>
+          <option>Admin Block</option>
+          <option>CS Block</option>
+          <option>MCA Block</option>
+          <option>DMBIM Block</option>
+          <option>Library</option>
+          <option>Canteen</option>
+          <option>Store</option>
+          <option>Day Care</option>
+          <option>Hostel</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="details">Tell us more</label>
+        <textarea id="details" placeholder="Describe what you noticed..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="contact">Your email (optional, if you'd like a reply)</label>
+        <input type="text" id="contact" placeholder="you@example.com">
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Feedback</button>
+
+      <div class="success-msg" id="successMsg">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Thanks! Your feedback has been noted.</span>
+      </div>
+
+    </form>
+  </div>
+
+</main>
+
+<script>
+document.querySelectorAll('.type-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+  });
+});
+
+document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const selectedType = document.querySelector('.type-chip.selected')?.dataset.value || 'Other';
+  const building = document.getElementById('building').value;
+  const details = document.getElementById('details').value;
+  const contact = document.getElementById('contact').value;
+
+  // No backend yet -- this simply confirms receipt in the UI.
+  // To wire this up for real, send { selectedType, building, details, contact }
+  // to a form endpoint (e.g. Formspree) or your own API.
+  console.log({ type: selectedType, building, details, contact });
+
+  document.getElementById('successMsg').classList.add('show');
+  this.reset();
+  document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelector('.type-chip').classList.add('selected');
+
+  setTimeout(() => {
+    document.getElementById('successMsg').classList.remove('show');
+  }, 4000);
+});
+</script>
+
+</body>
+</html>

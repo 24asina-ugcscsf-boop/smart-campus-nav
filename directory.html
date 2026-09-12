@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building Directory - Smart 3D Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  :root{
+    --bg-0:#100e26; --bg-1:#15132e; --bg-2:#1c1a3d;
+    --accent:#6C63FF; --accent-2:#8B7FFF;
+    --accent-dim:rgba(108,99,255,0.16);
+    --amber:#F5A623;
+    --card:#ffffff;
+    --line:rgba(255,255,255,0.07);
+    --text-hi:#ffffff; --text-mid:#b9b6d9; --text-low:#7c78a0;
+    --ink:#1c1836; --ink-mid:#605c85;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg-0);
+    color:var(--text-hi);
+    min-height:100vh;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:38px 38px;
+    background-attachment:fixed;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed;
+    top:-200px; left:50%;
+    width:900px; height:700px;
+    background:radial-gradient(circle, rgba(108,99,255,0.22) 0%, transparent 65%);
+    transform:translateX(-50%);
+    pointer-events:none;
+    z-index:0;
+  }
+  body::after{
+    content:'';
+    position:fixed;
+    bottom:-250px; right:-150px;
+    width:700px; height:700px;
+    background:radial-gradient(circle, rgba(245,166,35,0.10) 0%, transparent 65%);
+    pointer-events:none;
+    z-index:0;
+  }
+  header{ position:relative; z-index:2; }
+  main{ position:relative; z-index:1; }
+  header{
+    display:flex; align-items:center; gap:16px;
+    padding:18px 32px;
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border-bottom:1px solid var(--line);
+  }
+  .back-btn{
+    width:38px;height:38px;border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-mid); cursor:pointer; text-decoration:none; font-size:16px;
+    transition:background .15s;
+  }
+  .back-btn:hover{background:rgba(255,255,255,0.12);}
+  .head-titles h1{ font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; letter-spacing:0.5px; }
+  .head-titles p{ font-size:12px; color:var(--text-low); margin-top:2px; }
+
+  main{ max-width:1000px; margin:0 auto; padding:34px 28px 60px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  .b-card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    color:var(--ink);
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .b-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 16px 36px rgba(0,0,0,0.32);
+  }
+  .b-icon{
+    width:42px;height:42px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;
+    margin-bottom:12px;
+  }
+  .b-icon.c1{ background:#E7E3FF; color:#6C63FF; }
+  .b-icon.c2{ background:#FDE7D8; color:#E07A2C; }
+  .b-icon.c3{ background:#DCF6E8; color:#1E8449; }
+  .b-icon.c4{ background:#FCE4EC; color:#C2185B; }
+  .b-icon.c5{ background:#E0F3FB; color:#0E7AA6; }
+  .b-card h3{ font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:600; margin-bottom:6px; }
+  .b-card p{ font-size:12.5px; color:var(--ink-mid); line-height:1.5; }
+  .b-card .tap-hint{ font-size:10.5px; color:var(--accent); font-weight:600; margin-top:8px; }
+
+  @media(max-width:820px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:520px){ .grid{grid-template-columns:1fr;} header{padding:16px 18px;} main{padding:24px 18px 40px;} }
+
+  /* ---- Department modal ---- */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(10,9,26,0.65);
+    backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center;
+    padding:20px; opacity:0; transition:opacity .2s ease;
+  }
+  .modal-overlay.active{ display:flex; opacity:1; }
+  .modal-card{
+    background:var(--card); border-radius:20px;
+    max-width:420px; width:100%; padding:26px;
+    color:var(--ink);
+    box-shadow:0 30px 70px rgba(0,0,0,0.45);
+    transform:translateY(14px) scale(.97);
+    transition:transform .2s ease;
+  }
+  .modal-overlay.active .modal-card{ transform:translateY(0) scale(1); }
+  .modal-icon{
+    width:48px;height:48px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:19px; margin-bottom:14px;
+  }
+  .modal-icon.c1{ background:#E7E3FF; color:#6C63FF; }
+  .modal-icon.c2{ background:#FDE7D8; color:#E07A2C; }
+  .modal-icon.c3{ background:#DCF6E8; color:#1E8449; }
+  .modal-icon.c4{ background:#FCE4EC; color:#C2185B; }
+  .modal-icon.c5{ background:#E0F3FB; color:#0E7AA6; }
+  .modal-card h2{ font-family:'Poppins',sans-serif; font-size:18px; font-weight:700; margin-bottom:4px; }
+  .modal-card .modal-sub{ font-size:12px; color:var(--ink-mid); margin-bottom:16px; }
+  .dept-list{ display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:18px; }
+  .dept-item{
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;
+    background:#F7F6FF; border-radius:14px; padding:14px 10px;
+    font-size:12.5px; font-weight:600; color:var(--ink);
+  }
+  .dept-item .dept-icon{
+    width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px;
+  }
+  .dept-list.fallback{ display:flex; }
+  .dept-list.fallback .dept-item{
+    flex-direction:row; text-align:left; background:none; padding:0; font-weight:400; color:var(--ink-mid);
+  }
+  .modal-close{
+    width:100%; padding:12px; border:none; border-radius:999px;
+    background:var(--accent); color:#fff; font-family:inherit;
+    font-size:13px; font-weight:600; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+  <div class="head-titles">
+    <h1>BUILDING DIRECTORY</h1>
+    <p>All mapped blocks at SFRC Sivakasi</p>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <div class="b-card" onclick="openModal('mainBlock')">
+      <div class="b-icon c1"><i class="fa-solid fa-building-columns"></i></div>
+      <h3>Main Block</h3>
+      <p>Principal's office, administrative staff rooms, first-year lecture halls.</p>
+      <div class="tap-hint">Tap to see departments &rarr;</div>
+    </div>
+
+    <div class="b-card" onclick="openModal('adminBlock')">
+      <div class="b-icon c2"><i class="fa-solid fa-building"></i></div>
+      <h3>Admin Block</h3>
+      <p>Admissions, accounts, and examination cell. Open 9 AM - 5 PM.</p>
+      <div class="tap-hint">Tap to see departments &rarr;</div>
+    </div>
+
+    <div class="b-card" onclick="openModal('csBlock')">
+      <div class="b-icon c3"><i class="fa-solid fa-laptop-code"></i></div>
+      <h3>CS Block</h3>
+      <p>Computer Science department, labs on upper floors.</p>
+      <div class="tap-hint">Tap to see departments &rarr;</div>
+    </div>
+
+    <div class="b-card" onclick="openModal('mcaBlock')">
+      <div class="b-icon c4"><i class="fa-solid fa-microchip"></i></div>
+      <h3>MCA Block</h3>
+      <p>Master of Computer Applications department with project labs.</p>
+      <div class="tap-hint">Tap to see departments &rarr;</div>
+    </div>
+
+  </div>
+</main>
+
+<!-- DEPARTMENT MODAL -->
+<div class="modal-overlay" id="deptModal">
+  <div class="modal-card">
+    <div class="modal-icon" id="modalIcon"><i class="fa-solid fa-building"></i></div>
+    <h2 id="modalTitle">Building Name</h2>
+    <div class="modal-sub" id="modalSub">Departments &amp; offices</div>
+    <div class="dept-list" id="modalDeptList"></div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+const BUILDING_DATA = {
+  mainBlock: {
+    name: "Main Block", icon: "fa-building-columns", colorClass: "c1",
+    departments: ["Tamil", "English", "Nutrition", "Microbiology", "Physics", "Chemistry", "Botany"]
+  },
+  adminBlock: {
+    name: "Admin Block", icon: "fa-building", colorClass: "c2",
+    departments: ["Psychology", "B.Com CA", "B.Com General", "Commerce", "Principal's Room", "Controller Office", "SF Office", "Regulation Office", "Custom Department"]
+  },
+  csBlock: {
+    name: "CS Block", icon: "fa-laptop-code", colorClass: "c3",
+    departments: ["CS Regular Department", "Data Science", "English (SF)", "History"]
+  },
+  mcaBlock: {
+    name: "MCA Block", icon: "fa-microchip", colorClass: "c4",
+    departments: ["Web Lab", "MCA Department", "Maths", "CS (SF) Department", "Conference Hall", "BBA Department"]
+  }
+};
+
+// A distinct color for each icon tile, cycled across departments
+const DEPT_COLORS = [
+  { bg: "#E7E3FF", fg: "#6C63FF" }, // violet
+  { bg: "#FDE7D8", fg: "#E07A2C" }, // orange
+  { bg: "#DCF6E8", fg: "#1E8449" }, // green
+  { bg: "#FCE4EC", fg: "#C2185B" }, // pink
+  { bg: "#E0F3FB", fg: "#0E7AA6" }, // cyan
+  { bg: "#FFF3D6", fg: "#B4790A" }, // amber
+  { bg: "#EDE1FB", fg: "#8039C7" }, // purple
+  { bg: "#FCE9E9", fg: "#D14343" }, // red
+  { bg: "#E1F0EA", fg: "#2E9C7B" }  // teal
+];
+
+// One small icon per department, so each grid tile looks distinct
+const DEPT_ICONS = {
+  "Tamil": "fa-language",
+  "English": "fa-book-open",
+  "English (SF)": "fa-book-open",
+  "Nutrition": "fa-apple-whole",
+  "Microbiology": "fa-microscope",
+  "Physics": "fa-atom",
+  "Chemistry": "fa-flask",
+  "Botany": "fa-seedling",
+  "Psychology": "fa-brain",
+  "Psychology Department": "fa-brain",
+  "B.Com CA": "fa-calculator",
+  "B.Com CA Department": "fa-calculator",
+  "B.Com General": "fa-money-bill-wave",
+  "Commerce": "fa-chart-line",
+  "Principal's Room": "fa-user-tie",
+  "Controller Office": "fa-clipboard-check",
+  "SF Office": "fa-folder-open",
+  "Regulation Office": "fa-gavel",
+  "Custom Department": "fa-star",
+  "CS Regular Department": "fa-laptop-code",
+  "Data Science": "fa-chart-simple",
+  "History": "fa-landmark",
+  "Web Lab": "fa-globe",
+  "MCA Department": "fa-microchip",
+  "Maths": "fa-square-root-variable",
+  "CS (SF) Department": "fa-code",
+  "Conference Hall": "fa-people-group",
+  "BBA Department": "fa-briefcase"
+};
+
+function openModal(key) {
+  const b = BUILDING_DATA[key];
+  if (!b) return;
+
+  const modalIconEl = document.getElementById("modalIcon");
+  modalIconEl.className = "modal-icon " + (b.colorClass || "");
+  modalIconEl.innerHTML = `<i class="fa-solid ${b.icon}"></i>`;
+  document.getElementById("modalTitle").textContent = b.name;
+
+  const listEl = document.getElementById("modalDeptList");
+  const subEl = document.getElementById("modalSub");
+
+  if (b.departments && b.departments.length) {
+    subEl.textContent = "Departments & offices";
+    listEl.classList.remove("fallback");
+    listEl.innerHTML = b.departments.map((d, i) => {
+      const icon = DEPT_ICONS[d] || "fa-circle-dot";
+      const c = DEPT_COLORS[i % DEPT_COLORS.length];
+      return `<div class="dept-item"><div class="dept-icon" style="background:${c.bg};color:${c.fg}"><i class="fa-solid ${icon}"></i></div>${d}</div>`;
+    }).join("");
+    listEl.style.display = "grid";
+  } else {
+    subEl.textContent = "";
+    listEl.classList.add("fallback");
+    listEl.innerHTML = `<div class="dept-item">${b.desc}</div>`;
+    listEl.style.display = "flex";
+  }
+
+  document.getElementById("deptModal").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("deptModal").classList.remove("active");
+}
+
+document.getElementById("deptModal").addEventListener("click", (e) => {
+  if (e.target.id === "deptModal") closeModal();
+});
+</script>
+
+</body>
+</html>

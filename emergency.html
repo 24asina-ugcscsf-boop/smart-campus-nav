@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Contacts - Smart 3D Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  :root{
+    --bg-0:#100e26; --bg-1:#15132e; --bg-2:#1c1a3d;
+    --card:#ffffff; --line:rgba(255,255,255,0.07);
+    --text-hi:#ffffff; --text-mid:#b9b6d9; --text-low:#7c78a0;
+    --ink:#1c1836; --ink-mid:#605c85;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg-0);
+    color:var(--text-hi);
+    min-height:100vh;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:38px 38px;
+    background-attachment:fixed;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed; top:-200px; left:50%;
+    width:900px; height:700px;
+    background:radial-gradient(circle, rgba(224,92,92,0.18) 0%, transparent 65%);
+    transform:translateX(-50%);
+    pointer-events:none; z-index:0;
+  }
+  header{
+    position:relative; z-index:2;
+    display:flex; align-items:center; gap:16px;
+    padding:18px 32px;
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    border-bottom:1px solid var(--line);
+  }
+  .back-btn{
+    width:38px;height:38px;border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-mid); cursor:pointer; text-decoration:none; font-size:16px;
+    transition:background .15s;
+  }
+  .back-btn:hover{background:rgba(255,255,255,0.12);}
+  .head-titles h1{ font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; letter-spacing:0.5px; }
+  .head-titles p{ font-size:12px; color:var(--text-low); margin-top:2px; }
+
+  main{ position:relative; z-index:1; max-width:900px; margin:0 auto; padding:34px 24px 60px; }
+
+  .banner{
+    background:linear-gradient(135deg, #E05C5C, #F19393);
+    border-radius:var(--radius);
+    padding:18px 22px;
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:28px;
+    box-shadow:0 10px 30px rgba(224,92,92,0.35);
+  }
+  .banner i{ font-size:26px; color:#fff; }
+  .banner div h3{ font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:700; color:#fff; }
+  .banner div p{ font-size:12px; color:rgba(255,255,255,0.9); margin-top:2px; }
+
+  .section-title{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-low); margin:26px 0 12px; }
+  .section-title:first-of-type{ margin-top:0; }
+
+  .contact-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; }
+
+  .contact-card{
+    background:var(--card); border-radius:16px; padding:18px;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    text-decoration:none; color:var(--ink);
+    transition:transform .15s ease;
+  }
+  .contact-card:hover{ transform:translateY(-2px); }
+  .c-icon{
+    width:44px;height:44px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px; flex-shrink:0;
+  }
+  .c-icon.r1{ background:#FCE9E9; color:#D14343; }
+  .c-icon.r2{ background:#FDE7D8; color:#E07A2C; }
+  .c-icon.r3{ background:#E7E3FF; color:#6C63FF; }
+  .c-icon.r4{ background:#DCF6E8; color:#1E8449; }
+  .c-icon.r5{ background:#FCE4EC; color:#C2185B; }
+  .c-icon.r6{ background:#E0F3FB; color:#0E7AA6; }
+
+  .c-info h4{ font-size:13.5px; font-weight:700; margin-bottom:3px; }
+  .c-info .c-num{ font-size:14px; font-weight:700; color:var(--ink); }
+  .c-info .c-note{ font-size:11px; color:var(--ink-mid); margin-top:2px; }
+
+  .note{
+    margin-top:24px; font-size:11.5px; color:var(--text-low); text-align:center; line-height:1.6;
+  }
+
+  @media(max-width:600px){
+    .contact-grid{ grid-template-columns:1fr; }
+    header{padding:16px 18px;} main{padding:24px 16px 40px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+  <div class="head-titles">
+    <h1>EMERGENCY CONTACTS</h1>
+    <p>Quick access when every second counts</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="banner">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <div>
+      <h3>In a life-threatening emergency, call 112 immediately</h3>
+      <p>India's single national emergency number &mdash; connects to police, fire, and ambulance.</p>
+    </div>
+  </div>
+
+  <div class="section-title">On-Campus</div>
+  <div class="contact-grid">
+    <a class="contact-card" href="tel:100">
+      <div class="c-icon r3"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="c-info">
+        <h4>Security Desk</h4>
+        <div class="c-num">Ext. 100</div>
+        <div class="c-note">24/7 campus security, Main Gate</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:101">
+      <div class="c-icon r1"><i class="fa-solid fa-briefcase-medical"></i></div>
+      <div class="c-info">
+        <h4>First Aid / Medical Room</h4>
+        <div class="c-num">Ext. 101</div>
+        <div class="c-note">Near Admin Block</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:102">
+      <div class="c-icon r5"><i class="fa-solid fa-user-shield"></i></div>
+      <div class="c-info">
+        <h4>Women's Safety / Anti-Ragging Cell</h4>
+        <div class="c-num">Ext. 102</div>
+        <div class="c-note">Confidential reporting</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:103">
+      <div class="c-icon r6"><i class="fa-solid fa-user-tie"></i></div>
+      <div class="c-info">
+        <h4>Principal's Office</h4>
+        <div class="c-num">Ext. 103</div>
+        <div class="c-note">Main Block</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:104">
+      <div class="c-icon r2"><i class="fa-solid fa-bus"></i></div>
+      <div class="c-info">
+        <h4>Transport Coordinator</h4>
+        <div class="c-num">Ext. 104</div>
+        <div class="c-note">Bus &amp; shuttle queries</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:105">
+      <div class="c-icon r4"><i class="fa-solid fa-house-chimney"></i></div>
+      <div class="c-info">
+        <h4>Hostel Warden</h4>
+        <div class="c-num">Ext. 105</div>
+        <div class="c-note">Hostel Block</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-title">National Helplines</div>
+  <div class="contact-grid">
+    <a class="contact-card" href="tel:112">
+      <div class="c-icon r1"><i class="fa-solid fa-phone-volume"></i></div>
+      <div class="c-info">
+        <h4>National Emergency</h4>
+        <div class="c-num">112</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:100">
+      <div class="c-icon r3"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="c-info">
+        <h4>Police</h4>
+        <div class="c-num">100</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:108">
+      <div class="c-icon r4"><i class="fa-solid fa-truck-medical"></i></div>
+      <div class="c-info">
+        <h4>Ambulance</h4>
+        <div class="c-num">108</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:101">
+      <div class="c-icon r2"><i class="fa-solid fa-fire-extinguisher"></i></div>
+      <div class="c-info">
+        <h4>Fire Service</h4>
+        <div class="c-num">101</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:1091">
+      <div class="c-icon r5"><i class="fa-solid fa-hand-holding-heart"></i></div>
+      <div class="c-info">
+        <h4>Women's Helpline</h4>
+        <div class="c-num">1091</div>
+      </div>
+    </a>
+    <a class="contact-card" href="tel:1098">
+      <div class="c-icon r6"><i class="fa-solid fa-child-reaching"></i></div>
+      <div class="c-info">
+        <h4>Child Helpline</h4>
+        <div class="c-num">1098</div>
+      </div>
+    </a>
+  </div>
+
+  <p class="note">
+    Tap any card to call directly on mobile. On-campus extension numbers above are placeholders &mdash;
+    replace them with SFRC's actual office numbers before publishing.
+  </p>
+
+</main>
+
+</body>
+</html>
